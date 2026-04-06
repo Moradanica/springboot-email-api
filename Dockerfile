@@ -1,22 +1,22 @@
-# Use a lightweight Java runtime
+# Use official Eclipse Temurin OpenJDK 17
 FROM eclipse-temurin:17-jdk
 
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy Maven build files
+# Copy Maven files first (for dependency caching)
 COPY pom.xml .
 COPY src ./src
 
-# Build the project inside the container
+# Install Maven, build the JAR
 RUN apt-get update && apt-get install -y maven \
     && mvn clean package -DskipTests
 
-# Copy the JAR
-COPY target/springboot-email-api-0.0.1-SNAPSHOT.jar app.jar
+# Find the generated JAR automatically (no need to hardcode)
+RUN ls target/   # optional: check which JAR was created
+RUN cp target/*.jar app.jar
 
-# Expose the port Spring Boot will run on
+# Expose port
 EXPOSE 8080
 
-# Command to run the app
+# Start the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
