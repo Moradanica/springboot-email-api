@@ -30,7 +30,7 @@ public class EmailController {
 			logger.info(sendSimpleMail);
 			return "Message sent successfully";
 		} catch (Exception e) {
-			return "Error sending message";
+			return "Error sending message: " + e.getMessage();
 		}
 	}
 }
