@@ -7,33 +7,33 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.email.controller.EmailController;
 import com.email.dto.EmailDetails;
 
 @Service
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 	private JavaMailSender javaMailSender;
+
+	@Value("${spring.mail.username}")
 	private String recipient;
 
-	public EmailServiceImpl(JavaMailSender javamaMailSender, @Value("${spring.mail.username}") String recipient) {
+	public EmailServiceImpl(JavaMailSender javamaMailSender) {
 		this.javaMailSender = javamaMailSender;
-		this.recipient = recipient;
 	}
 
 	@Override
 	public String sendSimpleMail(EmailDetails details) {
 		logger.info("sending email");
-			SimpleMailMessage message = new SimpleMailMessage();
-			message.setFrom(details.getEmail());
-			message.setTo(recipient);
-			message.setSubject(details.getSubject());
-			message.setText("From: " + details.getName() + " <" + details.getEmail() + ">\n\n" + details.getMessage());
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(details.getEmail());
+		message.setTo(recipient);
+		message.setSubject(details.getSubject());
+		message.setText("From: " + details.getName() + " <" + details.getEmail() + ">\n\n" + details.getMessage());
 
-			javaMailSender.send(message);
-			return "Mail Sent Successfully";
-		
+		javaMailSender.send(message);
+		return "Mail Sent Successfully";
+
 	}
 
 	@Override
